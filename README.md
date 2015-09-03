@@ -1,7 +1,7 @@
 This is a template for a generic Node/Angular client/server project.  If you would like to create a project starting from this template, do the following:
 
     git clone git@github.com:aminer-looker/starter-project <your project name>
-    cd <your project name
+    cd <your project name>
     rm -rf .git
     git init
     git add -A
