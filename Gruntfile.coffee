@@ -43,18 +43,6 @@ module.exports = (grunt)->
                 files:
                     './src/coffee/client/templates.js': ['./src/jade/templates/**/*.jade']
 
-        mochaTest:
-            options:
-                bail:     true
-                color:    true
-                reporter: 'dot'
-                require: [
-                    'coffee-script/register'
-                    './test/test_helper.coffee'
-                ]
-                verbose: true
-            src: ['./test/**/*.test.coffee', './test/**/*.test.js']
-
         sass:
             all:
                 files:
@@ -79,11 +67,8 @@ module.exports = (grunt)->
             sass:
                 files: ['./src/**/*.scss']
                 tasks: ['sass']
-            test:
-                files: ['./src/**/*.coffee', './test/**/*.coffee']
-                tasks: ['test']
 
-    grunt.registerTask 'default', ['test', 'build']
+    grunt.registerTask 'default', ['build', 'start']
 
     grunt.registerTask 'browserify', "Bundle source files needed in the browser", ->
         grunt.file.mkdir './dist/static'
@@ -105,5 +90,3 @@ module.exports = (grunt)->
     grunt.registerTask 'start', "Start the music-site server at port 8080", ->
       done = this.async()
       grunt.util.spawn cmd:'./scripts/start', opts:{stdio:'inherit'}, -> done()
-
-    grunt.registerTask 'test', ['mochaTest']

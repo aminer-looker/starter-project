@@ -3,14 +3,23 @@
 # All rights reserved.
 #
 
-if typeof(global) is 'undefined'
-    window.global = window
-
 angular = require 'angular'
 
 ############################################################################################################
 
-angular.module 'app', ['composer', 'work']
+# Allow Node.js-style `global` in addition to `window`
+if typeof(global) is 'undefined'
+    window.global = window
+
+# Add 'require' statements for your other Angular module files here.
+require './modules/sample_module'
+
+# Add all your modules here.
+MODULES = [
+    'sample'
+]
+
+angular.module 'app', MODULES
     .config ($locationProvider)->
         $locationProvider.html5Mode true
 

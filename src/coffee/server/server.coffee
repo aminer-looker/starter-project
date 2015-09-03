@@ -3,10 +3,12 @@
 # All rights reserved.
 #
 
-express = require 'express'
-http    = require 'http'
-w       = require 'when'
-_       = require '../underscore'
+express    = require 'express'
+http       = require 'http'
+middleware = require './middleware'
+routes     = require './routes'
+w          = require 'when'
+_          = require '../underscore'
 
 ############################################################################################################
 
@@ -19,7 +21,10 @@ module.exports = class Server
 
         app = express()
         app.disable 'etag'
-        app.use express.static './static', etag:false, maxAge:0
+
+        middleware.installBefore app
+        app.use routes
+        middleware.installAfter app
 
         @httpServer = http.createServer app
 
