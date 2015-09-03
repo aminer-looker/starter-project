@@ -1,0 +1,40 @@
+/*
+ * Copyright (C) 2015 by Looker Data Services, Inc.
+ * All rights reserved.
+ */
+
+a {
+    color: $color-blue-medium;
+    text-decoration: none;
+
+    &:active {
+        color: $color-blue-light;
+    }
+
+    &:hover {
+        text-decoration: underline;
+    }
+
+    &:visited {
+        color: $color-blue-dark;
+    }
+}
+
+body {
+    margin: 3rem 1.5rem;
+}
+
+button {
+    outline: none;
+}
+
+h1 {
+    font-family: $font-family-text;
+    font-size: $font-size-large;
+    margin-top: 1rem;
+    margin-bottom: 0.4rem;
+
+    &:first-child {
+        margin-top: 0;
+    }
+}

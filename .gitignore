@@ -1,0 +1,7 @@
+*.log
+.DS_Store
+.sass-cache
+.tm_properties
+dist
+node_modules
+templates.js
