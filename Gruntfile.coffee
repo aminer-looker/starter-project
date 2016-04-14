@@ -90,6 +90,7 @@ module.exports = (grunt)->
                     './src/client/imports.scss': [
                         './src/client/styles/main.scss'
                         './src/client/directives/**/*.scss'
+                        './src/client/index.scss'
                     ]
 
         watch:
@@ -110,7 +111,7 @@ module.exports = (grunt)->
                 tasks: ['jade:templates', 'browserify:internal']
             sass:
                 files: ['./src/**/*.scss']
-                tasks: ['sass']
+                tasks: ['sass_globbing', 'sass']
 
     # Compound Tasks #######################################################################################
 

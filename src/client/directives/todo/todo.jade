@@ -1,0 +1,8 @@
+//-
+//- Copyright (C) 2015 by Looker Data Services, Inc.
+//- All rights reserved.
+//-
+
+.checkbox(ng-class="{checked: todo.isDone}" ng-click="doneChanged()")
+
+input(ng-model="todo.text" ng-change="textChanged()")

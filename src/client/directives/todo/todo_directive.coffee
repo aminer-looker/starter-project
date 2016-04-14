@@ -3,13 +3,14 @@
 # All rights reserved.
 #
 
-m = angular.module 'directives.todo_list'
+m = angular.module 'directives.todo'
 
 ############################################################################################################
 
-m.directive 'todoList', (
+m.directive 'todo', (
 )->
-  controller: 'TodoListController'
+  controller: 'TodoController'
   restrict: 'E'
-  scope: {}
-  template: templates['directives/todo_list']
+  scope:
+    modelId: '@'
+  template: templates['directives/todo']

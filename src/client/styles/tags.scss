@@ -20,21 +20,6 @@ a {
     }
 }
 
-body {
-    margin: 3rem 1.5rem;
-}
-
 button {
     outline: none;
-}
-
-h1 {
-    font-family: $font-family-text;
-    font-size: $font-size-large;
-    margin-top: 1rem;
-    margin-bottom: 0.4rem;
-
-    &:first-child {
-        margin-top: 0;
-    }
 }

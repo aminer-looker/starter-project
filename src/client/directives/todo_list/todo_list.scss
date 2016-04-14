@@ -1,0 +1,13 @@
+/*
+ * Copyright (C) 2015 by Looker Data Services, Inc.
+ * All rights reserved.
+ */
+
+todo-list {
+  border: 1px solid $color-gray-light;
+
+  display: flex;
+  flex-direction: column;
+
+  padding: 1rem;
+}

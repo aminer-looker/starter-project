@@ -7,13 +7,15 @@ m = angular.module 'directives.todo_list'
 
 ############################################################################################################
 
-m.controller 'todoListController', (
+m.controller 'TodoListController', (
+  $scope
   DatafluxEvent
+  TodoModelActions
   TodoModelStore
 )->
 
   $scope.todos = []
-  TodoModelStore.loadAll()
+  TodoModelActions.loadAll()
 
   # Listener Methods ###############################################################################
 

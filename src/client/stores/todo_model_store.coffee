@@ -7,8 +7,8 @@ m = angular.module 'stores', []
 
 ############################################################################################################
 
-m.factory 'TodoModelActions', ->
-  actions = Reflux.createActions ['loadAll', 'create', 'update', 'delete']
+m.factory 'TodoModelActions', (Reflux)->
+  return Reflux.createActions ['loadAll', 'create', 'update', 'delete']
 
 ############################################################################################################
 
@@ -16,9 +16,18 @@ m.factory 'TodoModelStore', (
   DatafluxEvent
   TodoModel
   Reflux
+  TodoModelActions
 )->
 
   Reflux.createStore
+
+    init: ->
+      @listen (event, id)=>
+        todos = TodoModel.getAll()
+        if todos.length is 0
+          @onCreate()
+
+    listenables: TodoModelActions
 
     # Public Method s###############################################################################
 
@@ -26,7 +35,7 @@ m.factory 'TodoModelStore', (
       return (model.toProxy() for model in TodoModel.getAll())
 
     get: (id)->
-      model = TodoModel.get id
+      return TodoModel.get(id)?.toProxy()
 
     # Action Methods ###############################################################################
 

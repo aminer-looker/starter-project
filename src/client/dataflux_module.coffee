@@ -28,7 +28,7 @@ m.run (DS, DSLocalStorageAdapter)->
 
 m.factory 'Reflux', ($log, $rootScope, DatafluxEvent)->
 
-  Reflux.StoreMethods.$listen = (callback)->
+  reflux.StoreMethods.$listen = (callback)->
     if typeof callback != 'function'
       throw new Error 'callback is not a function'
 
@@ -36,7 +36,7 @@ m.factory 'Reflux', ($log, $rootScope, DatafluxEvent)->
       $rootScope.$applyAsync ->
         callback.apply(null, args)
 
-  Reflux.logActions = (context, actions)->
+  reflux.logActions = (context, actions)->
     return actions unless debug.enabled
 
     logAction = (context, label, args...) ->
@@ -55,4 +55,4 @@ m.factory 'Reflux', ($log, $rootScope, DatafluxEvent)->
 
     return actions
 
-  return Reflux
+  return reflux

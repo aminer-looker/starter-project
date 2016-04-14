@@ -1,0 +1,37 @@
+/*
+ * Copyright (C) 2015 by Looker Data Services, Inc.
+ * All rights reserved.
+ */
+
+todo {
+  display: flex;
+
+  .checkbox {
+    flex: 0 0 auto;
+    height: 2rem;
+    width: 2rem;
+    margin-right: 0.5rem;
+
+    border: 1px solid $color-gray-medium;
+
+    &.checked {
+      text-align: center;
+
+      &:before {
+        content: "✓";
+        font-size: 2rem;
+        line-height: 2rem;
+      }
+    }
+  }
+
+  input {
+    flex: 1 1 100%;
+
+    border: 0;
+
+    font-family: $font-family-text;
+    font-size: 1.25rem;
+    padding: 0 0.5rem;
+  }
+}

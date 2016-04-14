@@ -1,0 +1,22 @@
+/*
+ * Copyright (C) 2015 by Looker Data Services, Inc.
+ * All rights reserved.
+ */
+
+body {
+  display: flex;
+
+  .content {
+    flex: 1 1 100%;
+    margin: 3rem;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    todo-list {
+      max-width: 500px;
+      width: 66%;
+    }
+  }
+}
