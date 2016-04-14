@@ -3,10 +3,12 @@
 # All rights reserved.
 #
 
-express = require 'express'
+m = angular.module 'directives.todo_list'
 
 ############################################################################################################
 
-module.exports = router = express.Router()
-
-# Add new routes to `router` here. Anything not described here will be assumed to be a static file request.
+m.directive 'todoList', (
+)->
+  restrict: 'E'
+  scope: {}
+  template: templates['directives/todo_list']

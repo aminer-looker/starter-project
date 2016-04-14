@@ -11,17 +11,24 @@ if typeof(global) is 'undefined'
 
 global.$ = require 'jquery' # must preceed Angular
 
-global.angular = require 'angular'
-global.reflux  = require 'reflux-core'
-global._       = require '../underscore'
+global.angular   = require 'angular'
+global.c         = require '../constants'
+global.reflux    = require 'reflux-core'
+global.templates = require './templates'
+global._         = require '../underscore'
 
-require 'js-data-angular' # must follow Angular, registers `DS` with Angular DI
+global.JSData                = require 'js-data'
+global.DSLocalStorageAdapter = require 'js-data-localstorage'
+require 'js-data-angular' # must follow `js-data` and `angular`
 
 # Configure Project ########################################################################################
 
 # Add all your modules here.
 MODULES = [
-    'sample'
+    require('./dataflux_module').name
+    require('./directives/directives_module').name
+    require('./models/models_module').name
+    require('./stores/stores_module').name
 ]
 
 angular.module 'app', MODULES

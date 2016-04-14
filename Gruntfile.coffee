@@ -7,14 +7,17 @@ fs = require 'fs'
 
 EXTERNAL_LIBS = [
     'angular'
+    'jade/lib/runtime'
     'jquery'
+    'js-data'
     'js-data-angular'
+    'js-data-localstorage'
     'reflux-core'
     'underscore'
     'underscore.inflections'
 ]
 
-########################################################################################################################
+############################################################################################################
 
 module.exports = (grunt)->
 
@@ -72,19 +75,7 @@ module.exports = (grunt)->
                         name = name.replace '.jade', ''
                         return name
                 files:
-                    './src/client/site/templates.js': ['./src/client/site/**/!(index)*.jade']
-
-        mochaTest:
-            options:
-                bail:     true
-                color:    true
-                reporter: 'dot'
-                require: [
-                    'coffee-script/register'
-                    './src/test_helper.coffee'
-                ]
-                verbose: true
-            src: ['./src/**/*.test.coffee']
+                    './src/client/templates.js': ['./src/client/**/!(index)*.jade']
 
         sass:
             all:
@@ -106,10 +97,10 @@ module.exports = (grunt)->
                 files: ['./assets/**/*']
                 tasks: ['copy:assets_build']
             client_source:
-                files: ['./src/{client,common}/**/*.coffee']
+                files: ['./src/client/**/*.coffee', './src/*.coffee']
                 tasks: ['browserify:internal']
             server_source:
-                files: ['./src/{common,server}/**/*.coffee']
+                files: ['./src/server/**/*.coffee', './src/*.coffee']
                 tasks: ['copy:server_source']
             jade_pages:
                 files: ['./src/**/index.jade']
@@ -120,9 +111,6 @@ module.exports = (grunt)->
             sass:
                 files: ['./src/**/*.scss']
                 tasks: ['sass']
-            test:
-                files: ['./src/**/*.coffee', './src/**/*.js', './test/**/*.coffee']
-                tasks: ['script:clear', 'test']
 
     # Compound Tasks #######################################################################################
 

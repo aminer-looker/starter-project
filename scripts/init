@@ -22,7 +22,7 @@ if ! which nodemon; then
 fi
 
 if ! which sass; then
-  sudo gem install sass
+  gem install sass
 fi
 
 npm install

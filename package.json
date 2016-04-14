@@ -33,6 +33,7 @@
     "jquery": "^2.2.3",
     "js-data": "^2.9.0",
     "js-data-angular": "^3.2.1",
+    "js-data-localstorage": "^2.3.2",
     "reflux-core": "^0.3.0",
     "underscore": "^1.8.3",
     "underscore.inflections": "^0.2.1",
