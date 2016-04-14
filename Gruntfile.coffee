@@ -3,22 +3,49 @@
 # All rights reserved.
 #
 
+fs = require 'fs'
+
+EXTERNAL_LIBS = [
+    'angular'
+    'jquery'
+    'js-data-angular'
+    'reflux-core'
+    'underscore'
+    'underscore.inflections'
+]
+
+########################################################################################################################
+
 module.exports = (grunt)->
 
     grunt.loadTasks tasks for tasks in grunt.file.expand './node_modules/grunt-*/tasks'
 
     grunt.config.init
 
-        rsync:
+        copy:
+            assets_build:
+                files: [
+                    {expand:true, cwd:'./assets/', src:'**/*', dest:'./build/server/static'}
+                ]
+            common_source:
+                files: [
+                    {expand:true, cwd:'./src', src:'*.coffee', dest:'./build', ext:'.coffee'}
+                ]
             server_source:
-                options:
-                    src: './src/coffee/*'
-                    dest: './dist/'
-                    exclude: ['client/']
-                    recursive: true
+                files: [
+                    expand: true
+                    cwd:    './src/server'
+                    src:    '**/*.coffee'
+                    dest:   './build/server'
+                    ext:    '.coffee'
+                ]
 
         clean:
-            dist: ['./dist']
+            assets:       ['./build/server/static/data', './build/server/static/images']
+            build:        ['./build']
+            dist:         ['./dist']
+            templates:    ['./src/client/templates.js']
+            imports_scss: ['./src/client/imports.scss']
 
         jade:
             pages:
@@ -26,67 +53,152 @@ module.exports = (grunt)->
                     pretty: true
                 files: [
                     expand: true
-                    cwd:  './src/jade/pages'
-                    src:  '**/*.jade'
-                    dest: './dist/static'
+                    cwd:  './src/client'
+                    src:  '**/index.jade'
+                    dest: './build/server/static'
                     ext:  '.html'
                 ]
             templates:
                 options:
                     client: true
                     node: true
-                    processName: (f)->
-                        f = f.replace './src/jade/templates/', ''
-                        f = f.replace '.jade', ''
-                        f = f.replace /\//g, '_'
-                        return f
+                    processName: (path)->
+                        pathElements = path.split '\/'
+                        while true
+                            element = pathElements.shift()
+                            break if element is 'client'
+                        pathElements.pop()
+                        name = pathElements.join '/'
+                        name = name.replace '.jade', ''
+                        return name
                 files:
-                    './src/coffee/client/templates.js': ['./src/jade/templates/**/*.jade']
+                    './src/client/site/templates.js': ['./src/client/site/**/!(index)*.jade']
+
+        mochaTest:
+            options:
+                bail:     true
+                color:    true
+                reporter: 'dot'
+                require: [
+                    'coffee-script/register'
+                    './src/test_helper.coffee'
+                ]
+                verbose: true
+            src: ['./src/**/*.test.coffee']
 
         sass:
             all:
+                options:
+                  sourcemap: 'none'
                 files:
-                    './dist/static/main.css': ['./src/scss/main.scss']
+                    './build/server/static/main.css': [ './src/client/imports.scss' ]
+
+        sass_globbing:
+            all:
+                files:
+                    './src/client/imports.scss': [
+                        './src/client/styles/main.scss'
+                        './src/client/directives/**/*.scss'
+                    ]
 
         watch:
+            assets:
+                files: ['./assets/**/*']
+                tasks: ['copy:assets_build']
             client_source:
-                files: ['./src/coffee/client/**/*.coffee']
-                tasks: ['browserify']
+                files: ['./src/{client,common}/**/*.coffee']
+                tasks: ['browserify:internal']
             server_source:
-                files: ['./src/coffee/server/**/*.coffee']
-                tasks: ['rsync:server_source']
-            shared_source:
-                files: ['./src/coffee/*.coffee', './src/coffee/model/**/*.coffee']
-                tasks: ['rsync:server_source', 'browserify']
+                files: ['./src/{common,server}/**/*.coffee']
+                tasks: ['copy:server_source']
             jade_pages:
-                files: ['./src/jade/pages/**/*.jade']
+                files: ['./src/**/index.jade']
                 tasks: ['jade:pages']
             jade_templates:
-                files: ['./src/jade/templates/**/*.jade']
-                tasks: ['jade:templates', 'browserify']
+                files: ['./src/**/!(index).jade']
+                tasks: ['jade:templates', 'browserify:internal']
             sass:
                 files: ['./src/**/*.scss']
                 tasks: ['sass']
+            test:
+                files: ['./src/**/*.coffee', './src/**/*.js', './test/**/*.coffee']
+                tasks: ['script:clear', 'test']
 
-    grunt.registerTask 'default', ['build', 'start']
+    # Compound Tasks #######################################################################################
 
-    grunt.registerTask 'browserify', "Bundle source files needed in the browser", ->
-        grunt.file.mkdir './dist/static'
+    grunt.registerTask 'build', 'build the project to be run from a local server',
+        ['jade', 'build:copy', 'build:css', 'browserify:external', 'browserify:internal']
 
+    grunt.registerTask 'build:copy', 'helper task for build',
+        ['copy:assets_build', 'copy:common_source', 'copy:server_source']
+
+    grunt.registerTask 'build:css', 'helper task for build',
+        ['sass_globbing', 'sass']
+
+    grunt.registerTask 'default', 'rebuild the project from scratch and start a local HTTP server',
+        ['clean', 'start']
+
+    grunt.registerTask 'start', 'build the project and start a local HTTP server',
+        ['build', 'script:start']
+
+    grunt.registerTask 'test', 'run unit tests',
+        ['mochaTest']
+
+    # Code Tasks ###########################################################################################
+
+    grunt.registerTask 'browserify:external', "Bundle 3rd-party libraries used in the app", ->
+        grunt.file.mkdir './build/server/static'
         done = this.async()
-        options = cmd:'browserify', args:[
-            '--extension=.coffee'
-            '--external=axios'
-            '--transform=coffeeify'
-            '--outfile=./dist/static/client.js'
-            './src/coffee/client/client.coffee'
+
+        args = [].concat ("--require=#{lib}" for lib in EXTERNAL_LIBS), [
+            '--outfile=./build/server/static/external.js'
+            '--ignore-missing'
         ]
+
+        options = cmd:'browserify', args:args
         grunt.util.spawn options, (error)->
             console.log error if error?
             done()
 
-    grunt.registerTask 'build', ['jade', 'rsync', 'sass', 'browserify']
+    grunt.registerTask 'browserify:internal', "Bundle source files needed in the browser", ->
+        grunt.file.mkdir './build/server/static'
+        done = this.async()
 
-    grunt.registerTask 'start', "Start the music-site server at port 8080", ->
+        libs = []
+        for lib in EXTERNAL_LIBS
+            parts = lib.split ':'
+            libs.push parts[parts.length-1]
+
+        args = [].concat ("--external=#{lib}" for lib in libs), [
+            '--extension=.coffee'
+            '--ignore-missing'
+            '--outfile=./build/server/static/internal.js'
+            '--transform=coffeeify'
+            './src/client/client.coffee'
+        ]
+
+        options = cmd:'browserify', args:args
+        grunt.util.spawn options, (error)->
+            console.log error if error?
+            done()
+
+    # Script Tasks #########################################################################################
+
+    grunt.registerTask 'script:clear', "clear the current terminal buffer", ->
       done = this.async()
-      grunt.util.spawn cmd:'./scripts/start', opts:{stdio:'inherit'}, -> done()
+      grunt.util.spawn cmd:'clear', opts:{stdio:'inherit'}, (error)-> done(error)
+
+    grunt.registerTask 'script:start', "start a local HTTP server on port 8080", ->
+      done = this.async()
+      grunt.util.spawn cmd:'./scripts/start', opts:{stdio:'inherit'}, (error)-> done(error)
+
+    # Command-Line Argument Processing #####################################################################
+
+    args = process.argv[..]
+    while args.length > 0
+        switch args[0]
+            when '--grep'
+                args.shift()
+                grunt.config.merge mochaTest:options:grep:args[0]
+
+        args.shift()

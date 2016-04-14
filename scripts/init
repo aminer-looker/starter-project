@@ -1,0 +1,41 @@
+#!/bin/bash
+
+if ! which npm; then
+  echo "Please go to https://nodejs.org/en/ and install Node.js"
+  exit
+fi
+
+if ! which gem; then
+  echo "Please go to https://rvm.io/rvm/install and install Ruby"
+fi
+
+if ! which browserify; then
+  sudo npm install -g browserify
+fi
+
+if ! which grunt; then
+  sudo npm install -g grunt-cli
+fi
+
+if ! which nodemon; then
+  sudo npm install -g nodemon
+fi
+
+if ! which sass; then
+  sudo gem install sass
+fi
+
+npm install
+grunt build
+
+cat <<-END
+You now have all project dependencies and are ready to go. The following
+commands may be used to manage the project and run a local server:
+
+    grunt clean -- remove all build files and artifacts
+    grunt build -- rebuild the project from scratch
+    grunt start -- start a local server on port 8080
+    grunt test  -- execute all unit tests
+    grunt watch -- watch files for changes and automatically rebuild
+
+END

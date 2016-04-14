@@ -1,7 +1,11 @@
 #!/bin/bash
 
-pushd './dist/' &>/dev/null
+if ! which nodemon; then
+  sudo npm install -g nodemon
+fi
+
+pushd './build/server' &>/dev/null
 clear
-nodemon ./server/server.coffee $*
+nodemon ./server.coffee $*
 echo ''
 popd &>/dev/null
