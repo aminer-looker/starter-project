@@ -13,14 +13,24 @@ todo {
     margin-right: 0.5rem;
 
     border: 1px solid $color-gray-medium;
+    color: $color-white;
+    text-align: center;
+
+    &:before {
+      content: "✓";
+      font-size: 2rem;
+      line-height: 2rem;
+    }
+
+    &:hover {
+      color: $color-gray-faint;
+    }
 
     &.checked {
-      text-align: center;
+      color: $color-black;
 
-      &:before {
-        content: "✓";
-        font-size: 2rem;
-        line-height: 2rem;
+      &:hover {
+        color: $color-black;
       }
     }
   }
@@ -33,5 +43,34 @@ todo {
     font-family: $font-family-text;
     font-size: 1.25rem;
     padding: 0 0.5rem;
+
+    &.complete {
+      color: $color-gray-light;
+      text-decoration: line-through;
+    }
+
+    &.empty {
+      border-bottom: 1px dashed $color-gray-medium;
+    }
+  }
+
+  .delete {
+    flex: 0 0 auto;
+    height: 2rem;
+    width: 2rem;
+    margin-left: 0.5rem;
+
+    color: $color-gray-light;
+    text-align: center;
+
+    &:before {
+      content: "✕";
+      font-size: 2rem;
+      line-height: 2rem;
+    }
+
+    &:hover {
+      color: $color-gray-medium;
+    }
   }
 }

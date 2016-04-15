@@ -23,8 +23,9 @@ m.factory 'TodoModelStore', (
 
     init: ->
       @listen (event, id)=>
-        todos = TodoModel.getAll()
-        if todos.length is 0
+        return unless event is DatafluxEvent.change
+
+        if not @hasEmptyTodo()
           @onCreate()
 
     listenables: TodoModelActions
@@ -35,7 +36,13 @@ m.factory 'TodoModelStore', (
       return (model.toProxy() for model in TodoModel.getAll())
 
     get: (id)->
-      return TodoModel.get(id)?.toProxy()
+      return TodoModel.get(id)?.toProxy() or null
+
+    hasEmptyTodo: ->
+      for todo in TodoModel.getAll()
+        return true if todo.isEmpty
+
+      return false
 
     # Action Methods ###############################################################################
 
@@ -52,7 +59,7 @@ m.factory 'TodoModelStore', (
           console.error "Could not create: ", error
 
     onDelete: (id)->
-      TodoModel.delete id
+      TodoModel.destroy id
         .then =>
           console.log "deleted Todo #{id}"
           @trigger DatafluxEvent.delete, id

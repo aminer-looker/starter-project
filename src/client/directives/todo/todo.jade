@@ -5,4 +5,6 @@
 
 .checkbox(ng-class="{checked: todo.isDone}" ng-click="doneChanged()")
 
-input(ng-model="todo.text" ng-change="textChanged()")
+input(ng-change="textChanged()" ng-class="{empty: noText, complete: complete}" ng-model="todo.text")
+
+.delete(ng-click="delete()")

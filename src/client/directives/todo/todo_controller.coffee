@@ -14,17 +14,26 @@ m.controller 'TodoController', (
   TodoModelStore
 )->
 
-  $scope.todo = TodoModelStore.get($scope.modelId)?.toHash() or {}
+  # Helper Functions ###############################################################################
+
+  _updateScope = ->
+    todo = TodoModelStore.get($scope.modelId) or {}
+
+    $scope.todo     = if todo.toHash? then todo.toHash() else todo
+    $scope.noText   = (todo.text?.length or 0) is 0
+    $scope.complete = todo.isDone
+
+  _updateScope()
 
   # Listener Methods ###############################################################################
 
   TodoModelStore.$listen (event, id)->
-    todo = TodoModelStore.get($scope.modelId)
-    return unless todo?
-
-    todo.mergeInto $scope.todo
+    _updateScope()
 
   # Scope Functions ################################################################################
+
+  $scope.delete = ->
+    TodoModelActions.delete $scope.modelId
 
   $scope.doneChanged = ->
     todo = TodoModelStore.get($scope.modelId)

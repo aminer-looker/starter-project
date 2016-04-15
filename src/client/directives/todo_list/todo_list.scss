@@ -10,4 +10,12 @@ todo-list {
   flex-direction: column;
 
   padding: 1rem;
+
+  todo {
+    margin-bottom: 1rem;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
 }

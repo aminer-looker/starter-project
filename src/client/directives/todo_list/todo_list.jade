@@ -3,5 +3,4 @@
 //- All rights reserved.
 //-
 
-div(ng-repeat="todo in todos track by todo.id")
-    todo(model-id="{{todo.id}}")
+todo(model-id="{{todo.id}}" ng-repeat="todo in todos track by todo.id")

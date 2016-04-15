@@ -22,6 +22,12 @@ m.factory 'TodoModel', (
       'text'
     ]
 
+    computed:
+
+      isEmpty: ['isDone', 'text', (isDone, text)->
+        return !isDone and text.length is 0
+      ]
+
     methods:
 
       toProxy: ->

@@ -15,6 +15,7 @@ m.controller 'TodoListController', (
 )->
 
   $scope.todos = []
+  $scope.canAdd = false
   TodoModelActions.loadAll()
 
   # Listener Methods ###############################################################################
@@ -22,3 +23,10 @@ m.controller 'TodoListController', (
   TodoModelStore.$listen (event, id)->
     return unless event is DatafluxEvent.change
     $scope.todos = TodoModelStore.getAll()
+    $scope.canAdd = ! TodoModelStore.hasEmptyTodo()
+
+  # Scope Methods ##################################################################################
+
+  $scope.add = ->
+    return if ! $scope.canAdd
+    TodoModelActions.create()
