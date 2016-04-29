@@ -7,10 +7,29 @@ m = angular.module 'models'
 
 ############################################################################################################
 
+# ModelProxy wraps another object and prevents any changes from being made to the original.  It can be
+# configured to only expose certain methods and properties of the original object, and even knows how to
+# deal with references to other objects which may, themselves, be proxied.
+#
+# When a property is first accessed, a deep copy is made so that any changes made anywhere inside it will
+# not affect the source object. Any changes made will only affect the copy.
 m.factory 'ModelProxy', ->
 
   class ModelProxy
 
+    # Creates a new ModelProxy. Along with a source object, a set of optional, named arguments should be
+    # provided: `fields`, `methods`, and `relations`.  Each of these are arrays of strings which name some
+    # property on the source object.
+    #
+    #  * Fields are treated as opaque data which must be fully protected from mutations, and which should
+    #    be cached so that changes to the underlying model aren't reflected in the proxy.
+    #  * Methods are treated as functions which are simply copied onto the proxy so that they may be called
+    #    at any time.
+    #  * Relations are treated as properties which should always be returned as-is from the underlying
+    #    source, and which should not permit assignment.
+    #
+    # Between these three optional arguments, at least one actual property must be named from the source
+    # object.
     constructor: (source, options={})->
       if not source then throw new Error 'source is required'
       options.fields ?= []
@@ -121,6 +140,7 @@ m.factory 'ModelProxy', ->
 
     # Public Methods #####################################################################
 
+    # Returns whether any fields in this ModelProxy differ from the fields on the source object
     checkDirty: ->
       for field in @_fields
         continue unless @_cache.hasOwnProperty(field)
@@ -131,7 +151,9 @@ m.factory 'ModelProxy', ->
     mergeInto: (target={}, options={})->
       return ModelProxy.merge(target, this, options)
 
-    # snakeCaseKeys: when a dataflux model object is used by legacy code that is expecting snake_case keys.
+    # Converts the current values of this model project into a simple JavaScript object with not methods or
+    # other behavior. Pass in `snakeCaseKeys: true` to convert the names to snake case in the returned
+    # hash.
     toHash: ({snakeCaseKeys}={})->
       hash = ModelProxy.deepClone(this)
       if snakeCaseKeys

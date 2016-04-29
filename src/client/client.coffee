@@ -12,7 +12,6 @@ if typeof(global) is 'undefined'
 global.$ = require 'jquery' # must preceed Angular
 
 global.angular   = require 'angular'
-global.c         = require '../constants'
 global.reflux    = require 'reflux-core'
 global.templates = require './templates'
 global._         = require '../underscore'

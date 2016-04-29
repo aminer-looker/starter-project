@@ -3,4 +3,15 @@
 //- All rights reserved.
 //-
 
+//- In Dataflux, we have several ways we keep our markup as simple as possible.  The first is to place all
+//- variables directly on the scope.  Since every directive uses isolate scope we can be sure that anything
+//- we see on the scope came from the controller responsible for this directive.
+//-
+//- The second trick we use is to perform all layout using flexbox.  This eliminates a ton of "hack"
+//- elements, styles, and classes needed to position things using older techniques.
+//-
+//- The third method we use is to create tightly scoped CSS for each directive. That way, we can easily add
+//- in directive-specific styles to format and position directives very exactly without polluting the global
+//- CSS namespace.
+
 todo(model-id="{{todo.id}}" ng-repeat="todo in todos track by todo.id")

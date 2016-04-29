@@ -3,6 +3,24 @@
  * All rights reserved.
  */
 
+// Each directive gets its very own SCSS file in which all rules are scoped to that specific directive (as
+// you see below).  Inside, you'll generally find a section for each element included inside the template
+// in the same order as the template.  Layout is done almost exclusively with flexbox.  The CSS for a child
+// directive is only specified up to the border of the child.  Any CSS which affects the internals of the
+// child directive should be in the child's own SCSS file.  Anything which affects the size or positioning
+// of the child belongs in the parent's file.
+//
+// Within each selector, we try to group similar-purposed CSS rules together:
+//
+//   * layout rules (e.g., flex, height, margin)
+//   * formatting rules (e.g., border, background, font-family)
+//   * child layout rules (e.g., `display: flex`, align-items, padding)
+//
+// After the rules for the current item follow selectors for child elements.  Psuedo-selectors attached to
+// the current element first, then followed by children in the same order they are declared in the template.
+// Finally, alternate styles (e.g., &.styleClass) for the element come last, and generally repeat internal
+// elements as necessary to create the proper alternate style.
+
 todo-list {
   border: 1px solid $color-gray-light;
 

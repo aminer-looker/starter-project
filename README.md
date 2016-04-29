@@ -16,6 +16,12 @@ Now, your new repository will contain the contents of your started project, and 
 
     ./script/init
 
+### Learning Dataflux
+
+If you're new to Dataflux, this starter project also has a lot of helpful documentation and best practices
+written into the code.  As you read the code, play around with the app and watch the console log to see how
+it behaves.
+
 ### How to use things...
 
 | Command              | Result                                            |
