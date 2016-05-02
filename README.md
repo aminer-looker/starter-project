@@ -14,7 +14,7 @@ Now you'll have a brand new project which has its own separate repository, and i
 
 Now, your new repository will contain the contents of your started project, and you're ready to start working!  Just run the following command to install all the build tools you need:
 
-    ./script/init
+    ./scripts/init
 
 ### Learning Dataflux
 
