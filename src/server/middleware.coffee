@@ -4,7 +4,6 @@
 #
 
 bodyParser     = require 'body-parser'
-constants      = require '../constants'
 clientSessions = require 'client-sessions'
 express        = require 'express'
 w              = require 'when'
